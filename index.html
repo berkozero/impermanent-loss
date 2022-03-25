@@ -1,0 +1,180 @@
+<!doctype html>
+<head lang="en">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ImpLoss</title>
+
+    
+    <!--JQuery-->
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+
+
+    <!--Bootstrap-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+    <style>
+        .navbar{
+            margin-bottom: 20px;
+        }
+
+        input{
+            width: 100%;
+        }
+
+        /* Code snippet to remove arrows from numeric fields */
+        /* Chrome, Safari, Edge, Opera */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+        }
+
+        /* Firefox */
+        input[type=number] {
+        -moz-appearance: textfield;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">ImpLoss</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample03" aria-controls="navbarsExample03" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+    
+          <div class="collapse navbar-collapse" id="navbarsExample03">
+            <ul class="navbar-nav me-auto mb-2 mb-sm-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="https://twitter.com">Twitter</a>
+              </li>
+            </ul>
+           
+          </div>
+        </div>
+      </nav>
+
+    <div class="container w-75">
+
+    <div class="row">
+    <h1>Impermanent Loss Calculator</h1>
+    </div>
+    <div class="row">
+        <p>Impermanent loss is a kind of opportunity cost of depositing your crypto assets (a pair of ERC-20 tokens) 
+           to liquidity pools (such as <a href="https://uniswap.org/">Uniswap</a>) instead of holding them. 
+        </p>
+        <p> Liquidity pools offer you additional income through trading fees and additional rewards but they also 
+            cause an impermanent loss due to the changes in prices of the assets when you deposited them vs when 
+            you withdraw them. This loss is made by arbitrageurs who buy one of your assets at a cheaper price than 
+            any other platform. 
+        </p>
+    </div>
+    <div class="row gy-1">
+        <div class="col-sm-3"><label for="t1o">Token 1 old price:</label></div>
+        <div class="col-sm-2"><input tabindex="1" class="functioninput" type="number" id="t1o" name="t1o"></div>
+        <div class="col-sm-7"></div>
+
+
+    </div>
+
+    <div class="row gy-2">
+        <div class="col-sm-3"><label class="" for="t2o">Token 2 old price:</label></div>
+        <div class="col-sm-2"><span class=""><input tabindex="2" class="functioninput" type="number" id="t2o" name="t2o"></span></div>
+        <div class="col-sm-7"></div>
+
+    </div>
+
+    <div class="row gy-1">
+        <div class="col-sm-3"><label class="" for="t1n">Token 1 new price:</label></div>
+        <div class="col-sm-2"><span class=""><input tabindex="3" class="functioninput" type="number" id="t1n" name="t1n"></span></div>
+        <div class="col-sm-1 text-center"><span class="">OR</span></div>
+        <div class="col-sm-2 text-nowrap"><span class=""><input tabindex="5" class="functioninput" type="number" id="t1np" name="t1np"> %</span></div>
+        <div class="col-sm-2"></div>
+
+    </div>
+
+
+    <div class="row gy-3">
+        <div class="col-sm-3"><label class="" for="t2n">Token 2 new price:</label></div>
+        <div class="col-sm-2"><span class=""><input tabindex="4" class="functioninput" type="number" id="t2n" name="t2n"></span></div>
+        <div class="col-sm-1 text-center"><span class="">OR</span></div>
+        <div class="col-sm-2 text-nowrap"><span class=""><input tabindex="6" class="functioninput" type="number" id="t2np" name="t2np"> %</span></div>
+        <div class="col-sm-2"></div>
+    </div>
+
+    <div class="row gy-3">
+        <div class="result my-5 col-sm-12">
+            Impermanent loss: <span style="font-weight: bold;" id="imploss"></span>
+        </div>
+    </div>
+
+</div>
+
+
+
+<script>
+    var round3 = function(num){
+        return Math.round(num*1000)/1000.0;
+    };
+
+    $('.functioninput').on("input", function(event){
+        console.log('test');
+
+        var t1o = $('#t1o').val();
+        var t2o = $('#t2o').val();
+
+        if(this.id === "t1np"){
+            var t1n = $("#t1o").val() * (1 + $("#t1np").val() / 100.0);
+            
+            $("#t1n").val(round3(t1n));
+            
+        }
+        else if(this.id === "t2np"){
+            
+            var t2n = $("#t2o").val() * (1 + $("#t2np").val() / 100.0);
+            
+            $("#t2n").val(round3(t2n));
+        }
+        else if(this.id === "t1n"){
+            t1n = $("#t1n").val();
+            $("#t1np").val(round3((t1n/t1o-1) * 100.0));
+        }
+
+        else if(this.id === "t2n"){
+            
+            t2n = $("#t2n").val();
+            
+            $("#t2np").val(round3((t2n/t2o-1) * 100.0));
+        }
+
+
+        var t1n = $('#t1n').val();
+        var t2n = $('#t2n').val();
+
+        var r1 = t1n/t1o;
+        var r2 = t2n/t2o;
+
+        c = r1/r2;
+
+        impl = 1 - (2 * Math.sqrt(c)/(1+c));
+        if(!isNaN(impl)){
+            $('#imploss').html(String(Math.round(impl*10000)/100) + "%");
+        }
+        else{
+            $('#imploss').html("");
+        }
+        
+        console.log(String(impl));
+        console.log(event.target.nodeName);
+        console.log(this.id);
+    });
+</script>
+
+    
+</body>
+
+</html>
